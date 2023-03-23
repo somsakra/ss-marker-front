@@ -1,28 +1,73 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hook";
 import { increment, decrement, addAmount } from "./features/counter-slice";
+import {
+  openLoginModal,
+  closeLoginModal,
+} from "./features/showLoginModal-slice";
+import { getAllNote } from "./features/note-slice";
 import { getDog } from "./features/dog-slice";
 import ButtonAppBar from "./components/ButtonAppBar";
 import BasicCard from "./components/BasicCard";
 import LoginModal from "./components/LoginModal";
+import Loading from "./components/Loading";
 
 function App() {
+  const showLoginModal = useAppSelector((state) => state.showLoginModal.value);
+  const notes = useAppSelector((state) => state.notes);
+
+  const dispatch = useAppDispatch();
+
+  const handleOpenLoginModal = () => dispatch(openLoginModal());
+  const handleCloseLoginModal = () => dispatch(closeLoginModal());
+
   const mockupNotes = [
-    { id: "1", title: "title1", content: "Content-1......" },
-    { id: "2", title: "title2", content: "Content-2......" },
-    { id: "3", title: "title3", content: "Content-3......" },
-    { id: "4", title: "title4", content: "Content-4......" },
-    { id: "5", title: "title5", content: "Content-5......" },
-    { id: "6", title: "title6", content: "Content-6......" },
-    { id: "7", title: "title7", content: "Content-7......" },
-    { id: "8", title: "title8", content: "Content-8......" },
+    {
+      _id: "641b14b3a5af1c88fb243e51",
+      title: "New to do",
+      content: "Content.....",
+      isDone: false,
+    },
+    {
+      _id: "641b14b6a5af1c88fb243e53",
+      title: "New to do",
+      content: "Content.....",
+      isDone: false,
+    },
+    {
+      _id: "641c889e0660243ed0527caf",
+      title: "New to do",
+      content: "Content.....",
+      isDone: false,
+    },
+    {
+      _id: "641c889f0660243ed0527cb1",
+      title: "New to do",
+      content: "Content.....",
+      isDone: false,
+    },
+    {
+      _id: "641c88a00660243ed0527cb3",
+      title: "New to do",
+      content: "Content.....",
+      isDone: false,
+    },
   ];
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbXNha3JhQGdtYWlsLmNvbSIsInVzZXJJZCI6IjY0MWIxNDk5YTVhZjFjODhmYjI0M2U0ZSIsImlhdCI6MTY3OTU5OTc0MywiZXhwIjoxNjc5NjAzMzQzfQ.58HrQ8DekIL-RVUn0B9My_tU7YEwKo91C-mcNMnNyLA";
+  useEffect(() => {
+    dispatch(getAllNote(token));
+  }, []);
+
+  if (notes.isLoading) return <Loading />;
 
   return (
     <div>
+      {/* <Loading /> */}
       <ButtonAppBar />
       <LoginModal />
-      <BasicCard notes={mockupNotes} />
+      <BasicCard />
     </div>
   );
 }

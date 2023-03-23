@@ -3,6 +3,8 @@ import counterReducer from "../features/counter-slice";
 import dogReducer from "../features/dog-slice";
 import showLoginModalReducer from "../features/showLoginModal-slice";
 import showRegisterModalReducer from "../features/showRegisterModal-slice";
+import notesReducer from "../features/note-slice";
+import userReducer from "../features/user-slice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     dogs: dogReducer,
     showLoginModal: showLoginModalReducer,
     showRegisterModal: showRegisterModalReducer,
+    notes: notesReducer,
+    user: userReducer,
   },
 });
 

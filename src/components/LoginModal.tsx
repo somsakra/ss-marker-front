@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import {
   openLoginModal,
@@ -7,6 +8,7 @@ import {
   openRegisterModal,
   closeRegisterModal,
 } from "../features/showRegisterModal-slice";
+import { userLogin } from "../features/user-slice";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -27,7 +29,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 450,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -35,6 +37,8 @@ const style = {
 };
 
 const LoginModal = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const showLoginModal = useAppSelector((state) => state.showLoginModal.value);
 
   const dispatch = useAppDispatch();
@@ -44,6 +48,9 @@ const LoginModal = () => {
 
   const handleOpenRegisterModal = () => dispatch(openRegisterModal());
   const handleCloseRegisterModal = () => dispatch(closeRegisterModal());
+
+  const handleUserLogin = () =>
+    dispatch(userLogin({ email: email, password: password }));
 
   return (
     <div>
@@ -63,25 +70,31 @@ const LoginModal = () => {
               variant="h5"
               component="div"
             >
-              Welcome to Marker
+              Login
             </Typography>
             <TextField
               required
               id="outlined-required"
               label="E-mail"
               defaultValue=""
+              onChange={(event) => setEmail(event.target.value)}
             />
             <TextField
               required
               id="outlined-required"
               label="Password"
               defaultValue=""
+              onChange={(event) => setPassword(event.target.value)}
             />
             <br />
-            <Button style={{ margin: "8px" }} variant="contained" size="large">
+            <Button
+              style={{ margin: "8px" }}
+              variant="contained"
+              size="large"
+              onClick={handleUserLogin}
+            >
               <LoginIcon />
             </Button>
-
             <Button
               style={{ margin: "8px" }}
               variant="contained"
