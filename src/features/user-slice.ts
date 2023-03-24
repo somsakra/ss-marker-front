@@ -2,7 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface IUser {
-  token: string | null;
+  // message: string;
+  email: string;
+  // token: string | null;
 }
 
 interface State {
@@ -11,7 +13,7 @@ interface State {
 }
 
 const initialState: State = {
-  value: { token: null },
+  value: { email: "" },
   isLoading: false,
 };
 
@@ -23,6 +25,18 @@ export const userLogin = createAsyncThunk(
       password: credential.password,
     });
     console.log(response);
+    return response.data;
+  }
+);
+
+export const getUserInfo = createAsyncThunk(
+  "getUserInfo",
+  async (token: string) => {
+    const response = await axios({
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      url: "http://localhost:3001/user/info",
+    });
     return response.data;
   }
 );
@@ -42,6 +56,22 @@ const userSlice = createSlice({
         if (state.isLoading === true) {
           state.isLoading = false;
           state.value = action.payload;
+        }
+      })
+      .addCase(getUserInfo.pending, (state, action) => {
+        if (state.isLoading === false) {
+          state.isLoading = true;
+        }
+      })
+      .addCase(getUserInfo.fulfilled, (state, action) => {
+        if (state.isLoading === true) {
+          state.isLoading = false;
+          state.value = action.payload;
+        }
+      })
+      .addCase(getUserInfo.rejected, (state, action) => {
+        if (state.isLoading === true) {
+          state.isLoading = false;
         }
       });
   },

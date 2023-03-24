@@ -11,10 +11,12 @@ import ButtonAppBar from "./components/ButtonAppBar";
 import BasicCard from "./components/BasicCard";
 import LoginModal from "./components/LoginModal";
 import Loading from "./components/Loading";
+import { getUserInfo } from "./features/user-slice";
 
 function App() {
   const showLoginModal = useAppSelector((state) => state.showLoginModal.value);
   const notes = useAppSelector((state) => state.notes);
+  const user = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 
@@ -54,13 +56,19 @@ function App() {
     },
   ];
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbXNha3JhQGdtYWlsLmNvbSIsInVzZXJJZCI6IjY0MWIxNDk5YTVhZjFjODhmYjI0M2U0ZSIsImlhdCI6MTY3OTU5OTc0MywiZXhwIjoxNjc5NjAzMzQzfQ.58HrQ8DekIL-RVUn0B9My_tU7YEwKo91C-mcNMnNyLA";
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    dispatch(getAllNote(token));
+    if (token) {
+      dispatch(getAllNote(token));
+      dispatch(getUserInfo(token));
+    } else if (!token) {
+      dispatch(openLoginModal());
+    }
   }, []);
 
   if (notes.isLoading) return <Loading />;
+  if (user.isLoading) return <Loading />;
 
   return (
     <div>

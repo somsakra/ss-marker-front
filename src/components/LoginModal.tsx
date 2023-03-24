@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactEventHandler, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import {
   openLoginModal,
@@ -37,8 +37,21 @@ const style = {
 };
 
 const LoginModal = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  interface ICredential {
+    email: string;
+    password: string;
+  }
+  const [credential, setCredential] = useState<ICredential>({
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setCredential({ ...credential, [name]: value });
+  };
   const showLoginModal = useAppSelector((state) => state.showLoginModal.value);
 
   const dispatch = useAppDispatch();
@@ -49,8 +62,12 @@ const LoginModal = () => {
   const handleOpenRegisterModal = () => dispatch(openRegisterModal());
   const handleCloseRegisterModal = () => dispatch(closeRegisterModal());
 
-  const handleUserLogin = () =>
-    dispatch(userLogin({ email: email, password: password }));
+  const handleUserLogin = async () => {
+    const result = await dispatch(userLogin(credential));
+    dispatch(closeLoginModal());
+    localStorage.setItem("token", result.payload.token);
+    window.location.href = "/";
+  };
 
   return (
     <div>
@@ -75,16 +92,18 @@ const LoginModal = () => {
             <TextField
               required
               id="outlined-required"
+              name="email"
               label="E-mail"
               defaultValue=""
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={handleInputChange}
             />
             <TextField
               required
               id="outlined-required"
+              name="password"
               label="Password"
               defaultValue=""
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={handleInputChange}
             />
             <br />
             <Button
