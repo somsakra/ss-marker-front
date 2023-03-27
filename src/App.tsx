@@ -12,6 +12,7 @@ import BasicCard from "./components/BasicCard";
 import LoginModal from "./components/LoginModal";
 import Loading from "./components/Loading";
 import { getUserInfo } from "./features/user-slice";
+import CreateArea from "./components/CreateArea";
 
 function App() {
   const showLoginModal = useAppSelector((state) => state.showLoginModal.value);
@@ -72,8 +73,15 @@ function App() {
 
   return (
     <div>
-      {/* <Loading /> */}
       <ButtonAppBar />
+      <CreateArea />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}
+      ></div>
       <LoginModal />
       <BasicCard />
     </div>

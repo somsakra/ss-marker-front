@@ -45,6 +45,34 @@ export const getAllNote = createAsyncThunk(
   }
 );
 
+export const createNote = createAsyncThunk(
+  "createNote",
+  async (createInfo: {
+    token: string | null;
+    noteInfo: { title: string; content: string };
+  }) => {
+    const response = await axios({
+      method: "POST",
+      headers: { Authorization: `Bearer ${createInfo.token}` },
+      data: createInfo.noteInfo,
+      url: "http://localhost:3001/note",
+    });
+    return response.data;
+  }
+);
+
+export const deleteNote = createAsyncThunk(
+  "deleteNote",
+  async (deleteInfo: { token: string | null; _id: string }) => {
+    const response = await axios({
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${deleteInfo.token}` },
+      url: `http://localhost:3001/note/${deleteInfo._id}`,
+    });
+    return response.data;
+  }
+);
+
 const noteSlice = createSlice({
   name: "notes",
   initialState,
@@ -57,6 +85,28 @@ const noteSlice = createSlice({
         }
       })
       .addCase(getAllNote.fulfilled, (state, action) => {
+        if (state.isLoading === true) {
+          state.isLoading = false;
+          state.value = action.payload;
+        }
+      })
+      .addCase(createNote.pending, (state, action) => {
+        if (state.isLoading === false) {
+          state.isLoading = true;
+        }
+      })
+      .addCase(createNote.fulfilled, (state, action) => {
+        if (state.isLoading === true) {
+          state.isLoading = false;
+          state.value = action.payload;
+        }
+      })
+      .addCase(deleteNote.pending, (state, action) => {
+        if (state.isLoading === false) {
+          state.isLoading = true;
+        }
+      })
+      .addCase(deleteNote.fulfilled, (state, action) => {
         if (state.isLoading === true) {
           state.isLoading = false;
           state.value = action.payload;

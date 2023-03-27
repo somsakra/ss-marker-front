@@ -41,6 +41,17 @@ export const getUserInfo = createAsyncThunk(
   }
 );
 
+export const userRegister = createAsyncThunk(
+  "userRegister",
+  async (credential: { email: string; password: string }) => {
+    const response = await axios.post("http://localhost:3001/user/signup", {
+      email: credential.email,
+      password: credential.password,
+    });
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -53,6 +64,17 @@ const userSlice = createSlice({
         }
       })
       .addCase(userLogin.fulfilled, (state, action) => {
+        if (state.isLoading === true) {
+          state.isLoading = false;
+          state.value = action.payload;
+        }
+      })
+      .addCase(userRegister.pending, (state, action) => {
+        if (state.isLoading === false) {
+          state.isLoading = true;
+        }
+      })
+      .addCase(userRegister.fulfilled, (state, action) => {
         if (state.isLoading === true) {
           state.isLoading = false;
           state.value = action.payload;

@@ -1,0 +1,35 @@
+form.create-note {
+  position: relative;
+  width: 480px;
+  margin: 30px auto 20px auto;
+  background: white;
+  padding: 15px;
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb(124, 124, 124);
+}
+
+form.create-note input,
+form.create-note textarea {
+  width: 100%;
+  resize: none;
+  padding: 4px;
+  outline: none;
+  border: none;
+  font-size: 1.2rem;
+  font-family: inherit;
+}
+
+form.create-note button {
+  position: absolute;
+  right: 18px;
+  bottom: -18px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  outline: none;
+  border: none;
+  background-color: #1976d2;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}

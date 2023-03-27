@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import {
   openRegisterModal,
   closeRegisterModal,
 } from "../features/showRegisterModal-slice";
+
+import { userRegister } from "../features/user-slice";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -36,6 +39,27 @@ const RegisterModal = () => {
   const handleOpenRegisterModal = () => dispatch(openRegisterModal());
   const handleCloseRegisterModal = () => dispatch(closeRegisterModal());
 
+  interface ICredential {
+    email: string;
+    password: string;
+  }
+  const [credential, setCredential] = useState<ICredential>({
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setCredential({ ...credential, [name]: value });
+  };
+
+  const handleUserRegister = async () => {
+    const result = await dispatch(userRegister(credential));
+    window.location.href = "/";
+  };
+
   return (
     <div>
       <Modal
@@ -57,18 +81,27 @@ const RegisterModal = () => {
             </Typography>
             <TextField
               required
+              name="email"
               id="outlined-required"
               label="E-mail"
               defaultValue=""
+              onChange={handleInputChange}
             />
             <TextField
               required
+              name="password"
               id="outlined-required"
               label="Password"
               defaultValue=""
+              onChange={handleInputChange}
             />
             <br />
-            <Button style={{ margin: "8px" }} variant="contained" size="large">
+            <Button
+              style={{ margin: "8px" }}
+              variant="contained"
+              size="large"
+              onClick={handleUserRegister}
+            >
               <PersonAddIcon />
             </Button>
           </CardContent>
